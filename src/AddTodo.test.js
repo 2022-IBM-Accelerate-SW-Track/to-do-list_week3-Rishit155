@@ -41,3 +41,76 @@ afterEach(() => {
  test('test that App component renders different colors for past due events', () => {
   render(<App />);
  });
+
+ test('test that App component renders Task', () => {
+  render(<App />);
+  const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
+  const inputDate = screen.getByPlaceholderText("mm/dd/yyyy");
+  const element = screen.getByRole('button', {name: /Add/i});
+  const dueDate = "10/20/2022";
+  fireEvent.change(inputTask, { target: { value: "History Test"}});
+  fireEvent.change(inputDate, { target: { value: dueDate}});
+  fireEvent.click(element);
+  const check = screen.getByText(/History Test/i);
+  const checkDate = screen.getByText(new RegExp(dueDate, "i"));
+  expect(check).toBeInTheDocument();
+  expect(checkDate).toBeInTheDocument();
+ });
+
+ //check to see no duplicate tasks
+ test('test that App component renders Task', () => {
+  render(<App />);
+  const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
+  const inputDate = screen.getByPlaceholderText("mm/dd/yyyy");
+  const element = screen.getByRole('button', {name: /Add/i});
+  const dueDate = "10/20/2022";
+  fireEvent.change(inputTask, { target: { value: "History Test"}});
+  fireEvent.change(inputDate, { target: { value: dueDate}});
+  fireEvent.click(element);
+  fireEvent.change(inputTask, { target: { value: "History Test"}});
+  fireEvent.change(inputDate, { target: { value: dueDate}});
+  fireEvent.click(element);
+  const check = screen.getAllBy(/History Test/i);
+  expect(check.length).toEqual(1);
+ });
+
+//Submit Task with No Due Date
+ test('test that App component renders Task', () => {
+  render(<App />);
+  const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
+  const element = screen.getByRole('button', {name: /Add/i});
+  fireEvent.change(inputTask, { target: { value: "History Test"}});
+  fireEvent.click(element);
+  const check = screen.getByText(/History Test/i);
+  expect(check).toBeNull();
+ });
+
+ //Submit Task with No Task Name
+ test('test that App component renders Task', () => {
+  render(<App />);
+  const inputDate = screen.getByPlaceholderText("mm/dd/yyyy");
+  const element = screen.getByRole('button', {name: /Add/i});
+  const dueDate = "10/20/2022";
+  fireEvent.change(inputDate, { target: { value: dueDate}});
+  fireEvent.click(element);
+  const check = screen.getByText(/History Test/i);
+  expect(check).toBeNull();
+ });
+
+ //Delete Task
+ test('test that App component renders Task', () => {
+  render(<App />);
+  const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
+  const inputDate = screen.getByPlaceholderText("mm/dd/yyyy");
+  const element = screen.getByRole('button', {name: /Add/i});
+  const element2 = screen.getByRole('checkbox', {name: 'delete'});
+  const dueDate = "10/20/2022";
+  fireEvent.change(inputTask, { target: { value: "History Test"}});
+  fireEvent.change(inputDate, { target: { value: dueDate}});
+  fireEvent.click(element);
+  fireEvent.click(element2);
+  const check = screen.getByText(/History Test/i);
+  const checkDate = screen.getByText(new RegExp(dueDate, "i"));
+  expect(check).toBeNull();
+  expect(checkDate).toBeNull();
+ });
